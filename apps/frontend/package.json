@@ -1,0 +1,8 @@
+{
+  "name": "@stocktrack360/frontend",
+  "private": true,
+  "scripts": {
+    "dev": "node -e \"console.log('Frontend pendiente de mover en Fase 2. Usa pnpm dev:frontend desde la raiz por ahora.')\"",
+    "lint": "node -e \"console.log('Frontend pendiente de mover en Fase 2. Usa pnpm lint desde la raiz por ahora.')\""
+  }
+}

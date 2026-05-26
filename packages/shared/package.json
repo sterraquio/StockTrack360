@@ -1,0 +1,14 @@
+{
+  "name": "@stocktrack360/shared",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./contracts": "./src/contracts/index.js",
+    "./constants": "./src/constants/index.js"
+  },
+  "scripts": {
+    "lint": "node --check src/index.js && node --check src/contracts/ApiRoutes.js && node --check src/contracts/ApiErrors.js && node --check src/constants/Roles.js && node --check src/constants/MovementTypes.js"
+  }
+}

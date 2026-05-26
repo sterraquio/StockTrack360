@@ -1,8 +1,10 @@
 # Guía de Diseño Frontend - StockTrack360
 
+> Este documento queda como referencia histórica del prototipo/Figma y de pantallas previas. La fuente visual principal vigente es `docs/design-system.md`. Para arquitectura y ubicación de archivos del frontend, usar `apps/frontend` y no la estructura legacy.
+
 ## 1. Paleta de colores
 
-Esta guia toma como fuente oficial el estilo ya implementado en las pantallas actuales de StockTrack360. Usar colores de Tailwind cuando sea posible para mantener consistencia entre modulos.
+Esta guía documenta el estilo base observado en el prototipo de StockTrack360. Usar colores de Tailwind cuando sea posible para mantener consistencia entre módulos, pero resolver cualquier contradicción a favor de `docs/design-system.md`.
 
 | Uso | Tailwind | Hex | Regla de uso |
 | --- | --- | --- | --- |

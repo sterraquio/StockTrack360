@@ -11,7 +11,13 @@
 
 Este archivo debe usarse como contexto principal antes de crear, modificar o refactorizar código del proyecto **StockTrack360**.
 
-Cuando exista diferencia entre documentos previos, este documento consolida la decisión final para el MVP. Las funcionalidades que no estén descritas aquí no deben implementarse sin aprobación del equipo.
+Cuando exista diferencia entre documentos previos, este documento consolida la decisión funcional final para el MVP. Las funcionalidades que no estén descritas aquí no deben implementarse sin aprobación del equipo.
+
+Fuentes complementarias obligatorias:
+
+- `docs/api-contracts.md`: contratos API entre frontend, gateway y servicios.
+- `docs/design-system.md`: fuente visual principal del frontend.
+- `docs/openapi.yaml`: especificación técnica complementaria del API Gateway.
 
 ---
 
@@ -21,7 +27,7 @@ Cuando exista diferencia entre documentos previos, este documento consolida la d
 
 El sistema permite administrar usuarios, productos, categorías, existencias, entradas y salidas de inventario, alertas operativas, dashboard e informes básicos. El objetivo del MVP es entregar una primera versión funcional, clara y mantenible, no una plataforma empresarial completa.
 
-StockTrack360 se desarrollará como una aplicación web accesible desde navegador moderno. La arquitectura será **modular con enfoque hacia microservicios**, organizada en un **monorepo**. Para esta primera versión, los módulos estarán separados lógicamente por dominio, pero no se desplegarán como microservicios completamente independientes.
+StockTrack360 se desarrollará como una aplicación web accesible desde navegador moderno. La arquitectura oficial será un **monorepo con enfoque de microservicios para MVP académico**, organizado en 5 apps principales: `apps/frontend`, `apps/api-gateway`, `apps/auth-service`, `apps/inventory-service` y `apps/reporting-alerts-service`, más `packages/shared`.
 
 ---
 
@@ -144,7 +150,7 @@ No se deben implementar en esta versión:
 - Analítica avanzada.
 - Reportes financieros complejos.
 - Creación, edición o eliminación de categorías por parte de usuarios.
-- Microservicios con despliegues independientes.
+- Despliegues independientes por microservicio.
 - Sistema de permisos altamente granular.
 - Inventario por lote avanzado.
 - Trazabilidad contable o fiscal.
@@ -702,7 +708,7 @@ No crear un rol adicional como `CONSULTA` en esta versión, porque no está defi
 - Gestión avanzada de compras.
 - Gestión avanzada de ventas.
 - CRUD de categorías desde la interfaz.
-- Microservicios independientes con despliegues separados.
+- Despliegues independientes por microservicio e infraestructura distribuida avanzada.
 
 ---
 
@@ -719,8 +725,8 @@ No crear un rol adicional como `CONSULTA` en esta versión, porque no está defi
 | Alertas | Stock bajo, vencidos, próximos a vencer 7/30 días. |
 | Dashboard | Indicadores principales del inventario. |
 | Reportes | Listados de stock bajo, vencimiento y productos con más salidas. |
-| Frontend | Vistas, componentes reutilizables, formularios, tablas y consumo de API. |
-| API Gateway lógico | Punto central de acceso a endpoints/módulos. En el MVP puede ser la capa de rutas API del backend. |
+| Frontend | Vistas, componentes reutilizables, formularios, tablas y consumo exclusivo del API Gateway. |
+| API Gateway | Punto único de entrada para el frontend bajo `/api`; redirige peticiones a servicios internos. |
 | Base de datos | Persistencia relacional de usuarios, categorías, productos y movimientos. |
 
 ---
@@ -731,106 +737,75 @@ No crear un rol adicional como `CONSULTA` en esta versión, porque no está defi
 
 La arquitectura oficial para el MVP será:
 
-**Arquitectura modular con enfoque hacia microservicios, organizada en monorepo.**
+**Monorepo con enfoque de microservicios usando 5 apps principales.**
 
 Esto significa:
 
 - El proyecto estará en un único repositorio.
-- Los módulos se separan por dominio.
-- No se deben mezclar responsabilidades.
-- No se implementan microservicios independientes en despliegues separados para esta versión.
-- La separación modular debe permitir evolucionar en el futuro hacia servicios independientes.
+- Cada app tiene una responsabilidad clara.
+- El frontend consume únicamente el API Gateway.
+- El API Gateway expone rutas públicas bajo `/api`.
+- Los servicios internos exponen rutas bajo `/internal`.
+- La base de datos PostgreSQL/Supabase será compartida para el MVP, con separación lógica por tablas.
+- En el futuro, cada servicio podría tener su propia base de datos, pero eso no se implementa en el MVP.
 
-### 15.2 Estilos complementarios
+### 15.2 Estructura oficial del monorepo
+
+```txt
+StockTrack360/
+├── apps/
+│   ├── frontend/
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── inventory-service/
+│   └── reporting-alerts-service/
+├── packages/
+│   └── shared/
+├── docs/
+├── AGENTS.md
+├── README.md
+└── package.json
+```
+
+La carpeta `stock-track-360/` puede existir temporalmente como frontend legacy o prototipo pendiente de migración. No es la arquitectura oficial nueva.
+
+### 15.3 Responsabilidad de cada app
+
+| App | Responsabilidad |
+|---|---|
+| `apps/frontend` | Aplicación Next.js/React. Contiene UI de login, dashboard, usuarios, productos, inventario, movimientos, alertas y reportes. Consume solo `apps/api-gateway`. |
+| `apps/api-gateway` | Punto único de entrada para el frontend. Expone `/api`, centraliza CORS, errores, validación de token y autorización general si aplica. |
+| `apps/auth-service` | Login, logout si aplica, credenciales, JWT, usuarios, roles `ADMINISTRADOR` y `USUARIO`, permisos y gestión administrativa de usuarios. |
+| `apps/inventory-service` | Productos, categorías predefinidas, stock actual, stock mínimo, vencimiento, entradas, salidas, historial y actualización atómica del stock. |
+| `apps/reporting-alerts-service` | Alertas de stock bajo, vencidos, próximos a vencer en 7/30 días, dashboard y reportes básicos. |
+| `packages/shared` | Constantes, contratos, roles, mensajes comunes y helpers reutilizables livianos. No contiene lógica pesada de un microservicio. |
+
+### 15.4 Estilos complementarios
 
 | Estilo | Aplicación |
 |---|---|
-| Arquitectura por capas | Separar presentación, rutas/controladores, lógica de negocio y acceso a datos. |
-| Cliente-servidor | El navegador consume servicios del backend. |
-| Enfoque hacia microservicios | Los módulos se organizan por dominio y podrán evolucionar luego. |
+| Arquitectura por capas | Separar presentación, rutas/controladores, lógica de negocio, acceso a datos y validaciones dentro de cada app. |
+| Cliente-servidor | El navegador consume el API Gateway. |
+| Enfoque de microservicios | Las apps se separan por dominio sin agregar complejidad de infraestructura innecesaria. |
 
-### 15.3 Tecnologías base
+### 15.5 Tecnologías base
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React + JavaScript |
-| Estilos frontend | Tailwind CSS si ya está definido en el repositorio del equipo. No introducir otra librería de UI sin aprobación. |
-| Backend | Next.js + JavaScript |
-| Base de datos | PostgreSQL con Supabase |
+| Frontend | React + JavaScript con Next.js |
+| Backend | JavaScript en apps de servicio y API Gateway |
+| Estilos frontend | Tailwind CSS si ya está definido en el repositorio. No introducir otra librería de UI sin aprobación. |
+| Base de datos | PostgreSQL con Supabase compartido para el MVP |
 | Autenticación | JWT |
 | Diseño/prototipo | Figma |
-| Documentación | README en Git + `/docs` |
+| Documentación | README en Git + `docs/` |
 | Control de versiones | Git |
 
-### 15.4 Estructura modular sugerida
+### 15.6 Reglas de arquitectura para Codex
 
-La estructura exacta puede variar según el repositorio, pero Codex debe conservar una organización parecida a esta:
+Codex debe respetar las 5 apps principales y no convertir el proyecto en una infraestructura distribuida compleja. No agregar Docker, Kubernetes, Kafka, RabbitMQ, Prisma ni nuevas apps principales sin aprobación explícita.
 
-```txt
-/docs
-  project-context.md
-  frontend-guidelines.md
-  requirements.md
-  user-stories.md
-  architecture.md
-
-/src
-  /app
-    /login
-    /dashboard
-    /products
-    /inventory
-    /movements
-    /alerts
-    /reports
-
-  /components
-    /ui
-    /layout
-    /forms
-    /tables
-    /feedback
-
-  /modules
-    /auth
-    /users
-    /categories
-    /products
-    /inventory
-    /movements
-    /alerts
-    /dashboard
-    /reports
-
-  /lib
-    supabaseClient.js
-    auth.js
-    permissions.js
-    validators.js
-
-  /services
-    authService.js
-    userService.js
-    productService.js
-    inventoryService.js
-    movementService.js
-    alertService.js
-    reportService.js
-
-  /api
-    /auth
-    /users
-    /products
-    /inventory
-    /movements
-    /alerts
-    /dashboard
-    /reports
-```
-
-### 15.5 Regla de arquitectura para Codex
-
-Codex no debe convertir el proyecto en una infraestructura distribuida compleja. Debe mantener módulos claros dentro del monorepo y usar una capa API centralizada que actúe como API Gateway lógico.
+Si una tarea afecta frontend, gateway o servicios, Codex debe revisar `docs/api-contracts.md` antes de modificar código.
 
 ---
 
@@ -1186,73 +1161,65 @@ No hacer llamadas directas dispersas desde cualquier componente. Centralizar lla
 
 ## 21. Distribución del trabajo para 3 integrantes
 
-### Integrante 1 — Autenticación, usuarios y seguridad
+La distribución oficial por apps es:
+
+### Integrante 1 — Frontend
+
+App principal:
+
+```txt
+apps/frontend
+```
 
 Responsabilidades:
 
-- Modelo de usuario.
-- Login.
-- JWT.
-- Middleware o guardas de autenticación.
-- Control de permisos por rol.
-- Gestión de usuarios.
-- Validación de correo único.
-- Estado activo/inactivo.
-- Protección de rutas administrativas.
-- Evidencias de login, usuarios y acceso denegado.
+- Pantallas de login, dashboard, usuarios, productos, inventario, movimientos, alertas y reportes.
+- Consumo exclusivo de `apps/api-gateway`.
+- Servicios o hooks frontend alineados con `docs/api-contracts.md`.
+- Componentes visuales compartidos.
+- Cumplimiento de `docs/design-system.md`.
+- Estados loading, empty, error y éxito.
 
-Entregables:
+No debe llamar directamente a `auth-service`, `inventory-service` ni `reporting-alerts-service`.
 
-- Login funcional.
-- CRUD administrativo de usuarios.
-- Restricción por rol.
-- Capturas de inicio de sesión y validaciones.
+### Integrante 2 — API Gateway y Auth Service
 
-### Integrante 2 — Productos, categorías, inventario y movimientos
+Apps principales:
+
+```txt
+apps/api-gateway
+apps/auth-service
+```
 
 Responsabilidades:
 
-- Modelo de categoría.
-- Modelo de producto.
-- Registro, edición, consulta y eliminación controlada de productos.
-- Validación de SKU único.
-- Stock inicial en 0.
-- Registro de entradas.
-- Registro de salidas.
-- Actualización automática de stock.
-- Historial de movimientos.
-- Validaciones transaccionales.
+- Rutas públicas bajo `/api`.
+- Proxy o redirección a microservicios internos.
+- CORS y errores centralizados.
+- Validación de token y autorización general si aplica.
+- Login, logout si aplica, JWT, usuarios, roles y permisos.
+- Gestión administrativa de usuarios.
 
-Entregables:
+No debe implementar lógica de inventario, alertas o reportes.
 
-- Gestión de productos.
-- Inventario general.
-- Entradas y salidas funcionales.
-- Historial de movimientos.
-- Capturas de CRUD, validaciones y actualización de stock.
+### Integrante 3 — Inventory Service y Reporting Alerts Service
 
-### Integrante 3 — Frontend general, alertas, dashboard, reportes e integración
+Apps principales:
+
+```txt
+apps/inventory-service
+apps/reporting-alerts-service
+```
 
 Responsabilidades:
 
-- Layout general.
-- Componentes compartidos.
-- Tablas, formularios y estados visuales.
-- Alertas de stock bajo.
-- Alertas de vencimiento.
-- Dashboard.
-- Reportes.
-- Integración visual entre módulos.
-- Mensajes de error, loaders, empty states.
-- Revisión final de consistencia UI.
+- Productos, categorías predefinidas, inventario y movimientos.
+- Stock actual, stock mínimo y vencimientos.
+- Actualización atómica del stock.
+- Alertas de stock bajo, vencidos y próximos a vencer.
+- Dashboard y reportes básicos.
 
-Entregables:
-
-- Interfaz consistente.
-- Sección de alertas.
-- Dashboard.
-- Reportes.
-- Capturas de vistas principales e integración.
+No debe implementar autenticación, gestión de usuarios ni lógica de frontend.
 
 ### Responsabilidades compartidas
 
@@ -1264,6 +1231,8 @@ Los tres integrantes deben:
 - Evitar duplicar componentes.
 - Revisar conflictos antes de hacer merge.
 - Probar el flujo completo antes de entregar.
+- No modificar apps de otro integrante sin justificarlo.
+- Definir o actualizar contratos antes de integrar frontend, gateway o servicios.
 
 ---
 
@@ -1364,12 +1333,14 @@ Estas tareas están agrupadas para no saturar el tablero con demasiadas tarjetas
 Codex debe:
 
 1. Leer este documento.
-2. Identificar el módulo afectado.
-3. Revisar si la funcionalidad está dentro del alcance.
-4. No implementar funcionalidades marcadas como fuera del MVP.
-5. Mantener la arquitectura modular.
-6. No duplicar componentes o servicios existentes.
-7. Explicar qué archivos va a modificar cuando sea posible.
+2. Leer `docs/api-contracts.md` si la tarea afecta frontend, gateway o servicios.
+3. Leer `docs/design-system.md` si la tarea afecta UI.
+4. Identificar la app afectada.
+5. Revisar si la funcionalidad está dentro del alcance.
+6. No implementar funcionalidades marcadas como fuera del MVP.
+7. Respetar la arquitectura de 5 apps.
+8. No duplicar componentes, servicios, contratos o constantes existentes.
+9. Explicar qué archivos va a modificar cuando sea posible.
 
 ### 23.2 Reglas de implementación
 
@@ -1377,16 +1348,18 @@ Codex debe respetar:
 
 - JavaScript como lenguaje principal.
 - React para interfaz.
-- Next.js para backend/rutas API si el repositorio está organizado así.
+- Next.js/React para `apps/frontend`.
+- API Gateway como único punto público para el frontend.
 - PostgreSQL con Supabase para persistencia.
 - JWT para autenticación.
 - RBAC validado desde backend.
 - Componentes reutilizables.
-- Servicios por módulo.
+- Servicios por app y dominio.
 - Validaciones en frontend y backend.
 - Transacciones o control atómico en movimientos de inventario.
 - Paginación en listados mayores a 10 registros.
 - Mensajes claros de error, éxito y estados vacíos.
+- Contratos definidos en `docs/api-contracts.md`.
 
 ### 23.3 Cosas que Codex no debe hacer
 
@@ -1394,7 +1367,8 @@ Codex no debe:
 
 - Crear funciones fuera del alcance sin autorización.
 - Agregar facturación, pagos, e-commerce, IA o múltiples bodegas.
-- Crear microservicios independientes con despliegues separados.
+- Agregar nuevas apps principales fuera de las 5 oficiales.
+- Agregar Docker, Kubernetes, Kafka, RabbitMQ o Prisma sin aprobación explícita.
 - Crear CRUD de categorías en el MVP.
 - Guardar contraseñas en texto plano.
 - Validar permisos solo en el frontend.
@@ -1404,6 +1378,8 @@ Codex no debe:
 - Cambiar nombres de roles sin actualizar toda la documentación y el código.
 - Introducir librerías grandes de UI sin aprobación.
 - Mezclar lógica de negocio dentro de componentes visuales si puede estar en servicios/módulos.
+- Crear rutas nuevas sin actualizar contratos.
+- Hacer que `apps/frontend` consuma servicios internos directamente.
 
 ### 23.4 Formato esperado de respuesta de Codex
 
@@ -1490,7 +1466,7 @@ La arquitectura es modular, con enfoque hacia microservicios, dentro de un monor
 | SKU | Código único de identificación de producto. En este proyecto equivale al código único del producto. |
 | JWT | Token usado para autenticación y autorización. |
 | RBAC | Control de acceso basado en roles. |
-| API Gateway lógico | Capa central que enruta peticiones hacia los módulos del sistema. |
+| API Gateway | App `apps/api-gateway` que expone rutas públicas bajo `/api` y enruta peticiones hacia servicios internos. |
 | Stock mínimo | Cantidad límite configurada para activar alerta de bajo stock. |
 | Stock disponible | Cantidad actual disponible de un producto. |
 | Entrada | Movimiento que aumenta el stock. |

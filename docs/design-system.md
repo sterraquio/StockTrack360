@@ -2,7 +2,7 @@
 
 ## 1. Propósito del sistema de diseño
 
-El sistema de diseño de StockTrack360 define las reglas visuales, tokens, componentes compartidos y patrones de interacción que deben usarse para implementar el frontend en React con Tailwind CSS.
+El sistema de diseño de StockTrack360 define las reglas visuales, tokens, componentes compartidos y patrones de interacción que deben usarse para implementar `apps/frontend` en React/Next.js con Tailwind CSS.
 
 Sirve para:
 
@@ -12,7 +12,7 @@ Sirve para:
 - Facilitar mantenimiento, revisión de pull requests y evolución del frontend.
 - Alinear la implementación con la guía visual proveniente de Figma y con el alcance del MVP.
 
-Cada integrante debe usar este documento antes de crear pantallas o componentes. Si existe un componente compartido en `/src/components/ui`, debe reutilizarse. Si una pantalla necesita una variante nueva, primero debe evaluarse si puede resolverse extendiendo el componente existente sin romper su API.
+Este documento es la fuente visual principal del frontend. Cada integrante debe usarlo antes de crear pantallas o componentes. Si existe un componente compartido en `apps/frontend/src/components/ui`, debe reutilizarse. Si una pantalla necesita una variante nueva, primero debe evaluarse si puede resolverse extendiendo el componente existente sin romper su API.
 
 ---
 
@@ -173,12 +173,12 @@ No usar rebotes, rotaciones decorativas, gradientes animados ni transiciones lar
 
 ## 3. Configuración técnica de Tailwind
 
-El proyecto usa Tailwind CSS v4. Se detectó en `stock-track-360/package.json` mediante las dependencias:
+El frontend objetivo usa Tailwind CSS v4. Mientras la migración esté en curso, esas dependencias pueden existir en la app legacy; al finalizar deben vivir en `apps/frontend/package.json`:
 
 - `tailwindcss: ^4`
 - `@tailwindcss/postcss: ^4`
 
-Por tanto, los tokens deben declararse con `@theme` en `stock-track-360/src/app/globals.css`.
+Por tanto, los tokens deben declararse con `@theme` en `apps/frontend/src/app/globals.css`.
 
 Ejemplo recomendado:
 
@@ -253,7 +253,7 @@ Si en el futuro el proyecto migra a Tailwind v3, estos tokens deben trasladarse 
 
 ## 4. Componentes compartidos obligatorios
 
-Todos los componentes compartidos deben vivir en `/src/components/ui` o en una carpeta compartida equivalente según su responsabilidad.
+Todos los componentes compartidos deben vivir en `apps/frontend/src/components/ui` o en una carpeta compartida equivalente dentro de `apps/frontend/src/components` según su responsabilidad.
 
 ### 4.1 Button
 
@@ -774,7 +774,7 @@ Reglas obligatorias:
 - No crear botones personalizados por módulo.
 - No usar colores hardcodeados fuera del sistema de diseño.
 - No duplicar componentes compartidos.
-- Usar siempre los componentes de `/src/components/ui` cuando existan.
+- Usar siempre los componentes de `apps/frontend/src/components/ui` cuando existan.
 - Usar badges para estados.
 - Usar alertas semánticas para errores, advertencias y éxitos.
 - Mantener consistencia en formularios, tablas, cards y modales.
@@ -793,10 +793,10 @@ Reglas obligatorias:
 
 ## 8. Estructura de carpetas recomendada
 
-Estructura sugerida para el frontend React/Next:
+Estructura sugerida para `apps/frontend`:
 
 ```txt
-/src
+apps/frontend/src
   /app
   /components
     /ui

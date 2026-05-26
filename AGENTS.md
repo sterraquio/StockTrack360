@@ -1,66 +1,150 @@
-# AGENTS.md - Instrucciones para Codex
+# AGENTS.md - Instrucciones para Codex y agentes de IA
 
 ## Proyecto
 
-Este repositorio corresponde a **StockTrack360**, una aplicación web de gestión de inventario orientada a pequeños y medianos negocios de Colombia.
+Este repositorio corresponde a **StockTrack360**, un MVP académico de aplicación web para gestión de inventario orientado a pequeños y medianos negocios de Colombia.
 
-El sistema permite centralizar la administración de productos, usuarios, existencias, movimientos de inventario, alertas operativas, dashboard y reportes básicos, con el objetivo de mejorar el control del stock y apoyar la toma de decisiones.
+El sistema centraliza productos, usuarios, existencias, entradas, salidas, historial de movimientos, alertas operativas, dashboard y reportes básicos para mejorar el control del stock.
 
-## Fuente de verdad del proyecto
+## Lectura obligatoria antes de modificar código
 
-Antes de modificar código, Codex debe revisar primero:
+Antes de programar, refactorizar o modificar documentación técnica, Codex debe leer:
 
-- `/docs/project-context.md`
+1. `docs/project-context.md`: fuente funcional principal del proyecto.
+2. `docs/api-contracts.md`: fuente principal de contratos API entre frontend, gateway y servicios.
+3. `docs/design-system.md`: fuente visual principal cuando la tarea afecte UI.
 
-Este archivo es la fuente principal de verdad del proyecto.
+También debe revisar cuando aplique:
 
-También debe revisar, si existen:
+- `docs/frontend-guidelines.md`: referencia histórica del prototipo/Figma, subordinada al sistema de diseño.
+- `docs/team-work-plan.md`: distribución del equipo y reglas de trabajo por apps.
+- `docs/development-phases.md`: fases oficiales de implementación.
+- `docs/agent-workflow.md`: forma recomendada de trabajar con Codex o agentes.
+- `docs/openapi.yaml`: especificación técnica complementaria del API Gateway.
 
-- `/docs/frontend-guidelines.md`
-- `/docs/design-system.md`
+Si `docs/project-context.md` no existe, Codex debe detenerse e indicarlo antes de continuar.
 
-Para el frontend, las fuentes de verdad quedan así:
+Codex no debe inventar alcance, rutas, roles, módulos, apps ni reglas de negocio que no estén en la documentación oficial.
 
-- `/docs/project-context.md`: fuente funcional principal.
-- `/docs/design-system.md`: fuente visual y técnica principal.
-- `/docs/frontend-guidelines.md`: referencia histórica del prototipo/Figma.
-- `AGENTS.md`: reglas operativas para Codex y colaboración.
+## Arquitectura oficial
 
-Si `/docs/project-context.md` no existe, Codex debe detenerse e indicarlo antes de continuar.
+StockTrack360 usa un **monorepo con enfoque de microservicios para MVP académico**.
 
-Si algún documento complementario no existe, Codex debe indicarlo, pero puede continuar usando `/docs/project-context.md` como referencia principal.
+Estructura oficial:
 
-Codex no debe inventar información que no esté definida en la documentación.
+```txt
+StockTrack360/
+├── apps/
+│   ├── frontend/
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── inventory-service/
+│   └── reporting-alerts-service/
+├── packages/
+│   └── shared/
+├── docs/
+├── AGENTS.md
+├── README.md
+└── package.json
+```
 
-## Tecnologías del proyecto
+No aumentar la arquitectura a más de 5 apps principales sin aprobación explícita.
 
-El proyecto debe desarrollarse respetando las tecnologías definidas:
+La carpeta `stock-track-360/` puede existir temporalmente como frontend legacy/prototipo pendiente de migración. No es la arquitectura oficial nueva.
 
-- Frontend: React + JavaScript.
-- Backend: Next.js + JavaScript.
+## Responsabilidad de cada app
+
+### `apps/frontend`
+
+- Aplicación Next.js/React.
+- Contiene la interfaz: login, dashboard, usuarios, productos, inventario, movimientos, alertas y reportes.
+- Debe consumir únicamente `apps/api-gateway`.
+- No debe llamar directamente a `auth-service`, `inventory-service` ni `reporting-alerts-service`.
+- Debe respetar `docs/design-system.md` y `docs/frontend-guidelines.md`.
+- Debe reutilizar componentes compartidos y evitar duplicación visual.
+
+### `apps/api-gateway`
+
+- Punto único de entrada para el frontend.
+- Expone rutas públicas bajo `/api`.
+- Redirige peticiones a servicios internos.
+- Centraliza CORS, manejo de errores, validación de token y autorización general si aplica.
+- Se comunica con `auth-service`, `inventory-service` y `reporting-alerts-service`.
+
+### `apps/auth-service`
+
+- Login y logout si aplica.
+- Validación de credenciales.
+- JWT.
+- Usuarios.
+- Roles `ADMINISTRADOR` y `USUARIO`.
+- Control de permisos.
+- Gestión administrativa de usuarios.
+
+### `apps/inventory-service`
+
+- Productos.
+- Categorías predefinidas.
+- Stock actual.
+- Stock mínimo.
+- Fecha de vencimiento.
+- Entradas y salidas.
+- Historial de movimientos.
+- Actualización automática y atómica del stock.
+
+### `apps/reporting-alerts-service`
+
+- Alertas de stock bajo.
+- Productos vencidos.
+- Productos próximos a vencer en 7 y 30 días.
+- Dashboard.
+- Reportes básicos: stock bajo, vencimientos, productos con más salidas y movimientos por periodo.
+
+### `packages/shared`
+
+- Tipos o modelos compartidos si aplica.
+- Constantes.
+- Contratos API.
+- Roles.
+- Mensajes comunes.
+- Helpers reutilizables livianos.
+- No debe contener lógica de negocio pesada propia de un microservicio.
+
+## Base de datos
+
+Para el MVP se usa una sola base de datos PostgreSQL/Supabase compartida, con separación lógica por tablas.
+
+Como mejora futura, cada microservicio podría tener su propia base de datos, pero eso está fuera del alcance actual.
+
+## Tecnologías oficiales
+
+- Frontend: React + JavaScript con Next.js.
+- Backend: Next.js/JavaScript o runtime JavaScript definido por cada app del monorepo.
 - Base de datos: PostgreSQL con Supabase.
 - Autenticación: JWT.
-- Diseño de prototipo: Figma.
-- Documentación: README y documentos dentro de `/docs`.
+- Estilos: Tailwind CSS cuando aplique en frontend.
+- Documentación: README y archivos en `docs/`.
 
-No cambiar estas tecnologías sin justificación explícita y sin aprobación del equipo.
+No cambiar tecnologías principales sin justificación y aprobación explícita.
 
-## Arquitectura del proyecto
+## Contratos API
 
-StockTrack360 debe seguir una arquitectura modular en monorepo con enfoque hacia microservicios.
+- El frontend debe consumir solo rutas públicas del API Gateway.
+- Las rutas públicas vigentes se documentan en `docs/api-contracts.md` y `docs/openapi.yaml`.
+- No inventar rutas nuevas desde frontend, gateway o servicios.
+- Si una tarea requiere cambiar un contrato, actualizar primero `docs/api-contracts.md` y después `docs/openapi.yaml`.
+- Las rutas públicas deben vivir bajo `/api`.
+- Las rutas internas de servicios deben vivir bajo `/internal`.
 
-Para este MVP, los módulos no deben implementarse como microservicios completamente independientes con despliegues separados. Deben organizarse lógicamente dentro del mismo repositorio, separando responsabilidades por dominio.
+Rutas de usuarios oficiales:
 
-La arquitectura debe mantener separación clara entre:
+```txt
+GET   /api/auth/users
+POST  /api/auth/users
+PATCH /api/auth/users/:id
+```
 
-- Presentación.
-- Rutas o controladores.
-- Lógica de negocio.
-- Acceso a datos.
-- Validaciones.
-- Componentes compartidos.
-
-Codex no debe mezclar toda la lógica del sistema en un solo archivo o módulo.
+No usar como contrato vigente rutas antiguas sin el prefijo de dominio definido en `docs/api-contracts.md`.
 
 ## Alcance funcional del MVP
 
@@ -87,7 +171,7 @@ El sistema sí debe incluir:
 - Reportes básicos.
 - Consulta integrada de producto con stock disponible.
 
-## Funcionalidades fuera del alcance
+## Fuera del alcance
 
 Codex no debe implementar en este MVP:
 
@@ -102,76 +186,59 @@ Codex no debe implementar en este MVP:
 - Gestión avanzada de compras a proveedores.
 - Gestión avanzada de ventas.
 - Analítica financiera avanzada.
-- Creación, edición o eliminación de categorías por parte de los usuarios.
+- Creación, edición o eliminación de categorías por usuarios.
+- Docker.
+- Kubernetes.
+- Kafka.
+- RabbitMQ.
+- Prisma, salvo aprobación explícita.
+- Nuevas apps principales fuera de las 5 oficiales.
 
-Si una tarea solicita alguna funcionalidad fuera del alcance, Codex debe advertirlo antes de implementarla.
+Si una tarea solicita algo fuera del alcance, Codex debe advertirlo antes de implementarlo.
 
 ## Roles del sistema
 
-Los roles funcionales del MVP son:
+Los únicos roles persistidos del MVP son:
+
+- `ADMINISTRADOR`
+- `USUARIO`
 
 ### Administrador
 
-Puede:
+Puede gestionar usuarios, registrar productos, editar productos, eliminar productos solo si tienen stock igual a 0, registrar entradas y salidas, consultar inventario, consultar historial, ver alertas, dashboard y reportes.
 
-- Gestionar usuarios.
-- Registrar productos.
-- Editar productos.
-- Eliminar productos solo si tienen stock igual a 0.
-- Registrar entradas y salidas.
-- Consultar inventario.
-- Consultar historial de movimientos.
-- Ver alertas.
-- Ver dashboard.
-- Ver reportes.
+### Usuario
 
-### Usuario / Encargado de inventario
+Puede registrar entradas y salidas, consultar productos, inventario e historial, ver alertas, dashboard y reportes básicos.
 
-Puede:
-
-- Registrar entradas y salidas.
-- Consultar productos.
-- Consultar inventario.
-- Consultar historial de movimientos.
-- Ver alertas.
-- Ver dashboard.
-- Ver reportes básicos.
-
-No puede:
-
-- Gestionar usuarios.
-- Eliminar productos.
-- Modificar roles o estados de otros usuarios.
+No puede gestionar usuarios, eliminar productos, modificar roles ni cambiar estados de otros usuarios.
 
 ## Reglas generales de desarrollo
 
 Codex debe:
 
-- Trabajar siempre con base en la documentación del proyecto.
-- Usar `/docs/design-system.md` como fuente visual principal del frontend.
-- Mantener el código claro, modular y mantenible.
-- Reutilizar componentes, funciones y módulos existentes antes de crear nuevos.
-- Evitar duplicar lógica.
-- Mantener nombres consistentes con la documentación.
-- Usar extensión `.jsx` para archivos que renderizan JSX, como páginas, layouts y componentes React.
-- Mantener en `.js` la lógica pura, servicios, constantes, contratos, helpers y archivos barrel de exportación.
+- Trabajar siempre con base en documentación oficial.
+- Proponer plan antes de cambios grandes.
+- Trabajar por fases pequeñas.
+- Identificar la app afectada antes de modificar.
+- No modificar múltiples apps sin justificarlo.
+- Reutilizar componentes, funciones, contratos y constantes existentes.
+- Mantener separación entre presentación, rutas/controladores, lógica de negocio, acceso a datos, validaciones y componentes compartidos.
+- Usar `.jsx` para archivos que renderizan JSX.
+- Usar `.js` para lógica pura, servicios, constantes, contratos, helpers y barrels.
 - Usar `SKU` y `código único` como el mismo concepto.
-- Respetar las reglas de negocio definidas.
-- Explicar qué archivos crea, modifica o elimina.
-- Indicar riesgos, pendientes o supuestos técnicos.
-- Proponer un plan antes de cambios grandes.
+- Validar permisos en backend, no solo en interfaz.
+- Mantener mensajes de login genéricos.
 
 Codex no debe:
 
-- Crear funcionalidades fuera del alcance.
-- Cambiar la arquitectura sin justificación.
-- Cambiar tecnologías principales sin aprobación.
-- Crear componentes duplicados.
-- Crear botones, inputs, tablas, cards, modales o badges personalizados por módulo si existe un componente compartido en `stock-track-360/src/components`.
-- Usar colores hardcodeados en pantallas cuando exista un token o clase del sistema de diseño.
-- Dejar código muerto o sin uso.
-- Eliminar documentación.
-- Romper módulos de otros integrantes sin explicar el impacto.
+- Crear funcionalidades fuera del MVP.
+- Cambiar arquitectura sin aprobación.
+- Crear componentes visuales duplicados si existe uno compartido en `apps/frontend/src/components`.
+- Usar colores hardcodeados si existe token o clase del sistema de diseño.
+- Dejar código muerto.
+- Eliminar documentación sin justificación.
+- Romper módulos de otros integrantes sin explicar impacto.
 - Introducir dependencias innecesarias.
 
 ## Reglas de autenticación y seguridad
@@ -183,13 +250,31 @@ El token debe permitir identificar:
 - Usuario autenticado.
 - Rol del usuario.
 
-El sistema debe aplicar control de acceso basado en roles.
+El sistema debe aplicar control de acceso basado en roles. Las validaciones de permisos deben hacerse en backend.
 
-Las validaciones de permisos deben hacerse en backend, no solo en la interfaz.
-
-Durante el inicio de sesión, los errores deben ser genéricos. No se debe indicar si falló el correo, la contraseña o el estado del usuario.
-
-Mensaje recomendado:
+Durante el inicio de sesión, los errores deben ser genéricos. Mensaje recomendado:
 
 ```txt
 Usuario o contraseña incorrectos.
+```
+
+## Formato esperado de respuesta de Codex
+
+Al finalizar una tarea, Codex debe responder con:
+
+```md
+## Resumen
+Qué se hizo.
+
+## Archivos modificados
+- ruta/archivo
+
+## Decisiones técnicas
+Decisiones relevantes.
+
+## Cómo probar
+Pasos concretos.
+
+## Pendientes o riesgos
+Lo que falta revisar.
+```
