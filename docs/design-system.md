@@ -763,7 +763,7 @@ Reglas de redacción:
 - Mensajes de error deben indicar una acción posible cuando aplique.
 - No usar tecnicismos como `request`, `payload`, `endpoint` o `mutation`.
 - No usar mayúsculas completas para mensajes al usuario.
-- En login, usar mensaje genérico: `Usuario o contraseña incorrectos.`
+- En login, usar mensaje genérico: `Correo o contraseña incorrectos.`
 
 ---
 
@@ -840,7 +840,7 @@ Uso esperado:
 - Usar `Input` para correo y contraseña.
 - Usar `Button primary` ancho completo.
 - Mostrar errores con `Alert error`.
-- Mensaje de error genérico: `Usuario o contraseña incorrectos.`
+- Mensaje de error genérico: `Correo o contraseña incorrectos.`
 
 ### Dashboard
 

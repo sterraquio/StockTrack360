@@ -274,7 +274,7 @@ GET /internal/reports/movements-by-period
 
 - Errores posibles: `400 VALIDATION_ERROR`, `401 INVALID_CREDENTIALS`, `403 USER_INACTIVE`
 - Validaciones: `email` requerido, `password` requerido.
-- Notas de implementacion: el mensaje de login fallido debe ser generico: `Usuario o contrasena incorrectos.`
+- Notas de implementacion: el mensaje de login fallido debe ser generico: `Correo o contrasena incorrectos.`
 
 ### Obtener usuario actual
 

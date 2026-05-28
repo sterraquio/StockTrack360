@@ -2,6 +2,7 @@ export * from "./alertsService";
 export * from "./apiClient";
 export * from "./apiContract";
 export * from "./apiError";
+export * from "./authMock";
 export * from "./authService";
 export * from "./authStorage";
 export * from "./movementsService";

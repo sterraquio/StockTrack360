@@ -1,6 +1,12 @@
 import { apiRequest } from "./apiClient";
 import { API_CONTRACT } from "./apiContract";
 import {
+  isAuthMockEnabled,
+  mockGetCurrentUser,
+  mockLogin,
+  mockLogout,
+} from "./authMock";
+import {
   clearAuthSession,
   setAuthSession,
   setAuthUser,
@@ -9,6 +15,12 @@ import {
 const { auth } = API_CONTRACT;
 
 export async function login(credentials) {
+  if (isAuthMockEnabled()) {
+    const response = await mockLogin(credentials);
+    setAuthSession(response);
+    return response;
+  }
+
   const response = await apiRequest(auth.login.path, {
     auth: false,
     body: credentials,
@@ -26,6 +38,12 @@ export async function login(credentials) {
 }
 
 export async function getCurrentUser() {
+  if (isAuthMockEnabled()) {
+    const user = await mockGetCurrentUser();
+    setAuthUser(user);
+    return user;
+  }
+
   const user = await apiRequest(auth.me.path, {
     method: auth.me.method,
   });
@@ -36,6 +54,14 @@ export async function getCurrentUser() {
 }
 
 export async function logout() {
+  if (isAuthMockEnabled()) {
+    try {
+      return await mockLogout();
+    } finally {
+      clearAuthSession();
+    }
+  }
+
   try {
     return await apiRequest(auth.logout.path, {
       method: auth.logout.method,

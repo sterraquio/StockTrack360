@@ -12,5 +12,5 @@ export const USER_MESSAGES = {
   expiringProduct: "Producto próximo a vencer.",
   invalidSession: "Tu sesión no es válida. Inicia sesión nuevamente.",
   forbidden: "No tienes permisos para realizar esta acción.",
-  invalidLogin: "Usuario o contraseña incorrectos.",
+  invalidLogin: "Correo o contraseña incorrectos.",
 };
