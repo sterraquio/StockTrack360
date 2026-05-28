@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui";
+import { PermissionGate } from "@/features/auth/PermissionGate";
 import { ModulePlaceholder } from "@/features/shared/ModulePlaceholder";
+import { PERMISSIONS } from "@/utils/permissions";
 
 export default function ProductsRoute() {
   return (
     <ModulePlaceholder
-      actions={<Button>Agregar producto</Button>}
+      actions={
+        <PermissionGate permission={PERMISSIONS.MANAGE_PRODUCTS}>
+          <Button>Agregar producto</Button>
+        </PermissionGate>
+      }
       description="Registro, consulta, edición y eliminación controlada de productos."
       highlights={[
         { label: "Catálogo", status: "Tabla", value: "0" },

@@ -11,7 +11,7 @@ export const APP_ROUTES = [
     label: "Productos",
     href: "/productos",
     icon: "products",
-    permission: PERMISSIONS.MANAGE_PRODUCTS,
+    permission: PERMISSIONS.VIEW_PRODUCTS,
   },
   {
     label: "Inventario",
@@ -48,3 +48,11 @@ export const APP_ROUTES = [
 export const PUBLIC_ROUTES = {
   login: "/login",
 };
+
+export const DEFAULT_AUTHENTICATED_ROUTE = "/dashboard";
+
+export function getRouteByPathname(pathname) {
+  return APP_ROUTES.find((route) => {
+    return pathname === route.href || pathname.startsWith(`${route.href}/`);
+  });
+}

@@ -5,6 +5,7 @@ export * from "./apiError";
 export * from "./authMock";
 export * from "./authService";
 export * from "./authStorage";
+export * from "./inventoryService";
 export * from "./movementsService";
 export * from "./productsService";
 export * from "./reportsService";
