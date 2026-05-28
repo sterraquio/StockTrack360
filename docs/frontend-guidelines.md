@@ -1,6 +1,6 @@
 # Guía de Diseño Frontend - StockTrack360
 
-> Este documento queda como referencia histórica del prototipo/Figma y de pantallas previas. La fuente visual principal vigente es `docs/design-system.md`. Para arquitectura y ubicación de archivos del frontend, usar `apps/frontend` y no la estructura legacy.
+> Este documento queda como referencia histórica del prototipo/Figma y de pantallas previas. La fuente visual principal vigente es `docs/design-system.md`. Para arquitectura y ubicación de archivos del frontend, usar `apps/frontend`.
 
 ## 1. Paleta de colores
 

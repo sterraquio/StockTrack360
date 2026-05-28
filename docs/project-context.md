@@ -767,7 +767,7 @@ StockTrack360/
 └── package.json
 ```
 
-La carpeta `stock-track-360/` puede existir temporalmente como frontend legacy o prototipo pendiente de migración. No es la arquitectura oficial nueva.
+El frontend oficial vive en `apps/frontend`. La carpeta temporal del prototipo fue retirada después de migrar su base visual.
 
 ### 15.3 Responsabilidad de cada app
 

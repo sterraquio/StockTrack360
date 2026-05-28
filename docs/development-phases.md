@@ -15,7 +15,7 @@ Cada fase debe cerrarse con evidencia mínima, revisión de contratos cuando apl
 ## Fase 0: Diagnóstico
 
 - Revisar estado real del repositorio.
-- Identificar qué existe en `apps/`, `packages/`, `docs/` y la carpeta legacy `stock-track-360/`.
+- Identificar qué existe en `apps/`, `packages/` y `docs/`.
 - Detectar contradicciones entre documentos.
 - Confirmar que el alcance sigue alineado con `docs/project-context.md`.
 
@@ -29,8 +29,8 @@ Salida esperada:
 
 - Confirmar estructura oficial de `apps/*` y `packages/shared`.
 - Mantener máximo 5 apps principales.
-- No mover código legacy sin plan específico.
-- Documentar la carpeta `stock-track-360/` como temporal si sigue existiendo.
+- Mantener el frontend oficial en `apps/frontend`.
+- No reintroducir carpetas de prototipo fuera de la arquitectura oficial.
 
 Salida esperada:
 

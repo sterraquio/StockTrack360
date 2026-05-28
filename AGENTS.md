@@ -50,7 +50,7 @@ StockTrack360/
 
 No aumentar la arquitectura a más de 5 apps principales sin aprobación explícita.
 
-La carpeta `stock-track-360/` puede existir temporalmente como frontend legacy/prototipo pendiente de migración. No es la arquitectura oficial nueva.
+El frontend oficial vive en `apps/frontend`. No reintroducir carpetas de prototipo fuera de la arquitectura oficial.
 
 ## Responsabilidad de cada app
 

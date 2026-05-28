@@ -173,7 +173,7 @@ No usar rebotes, rotaciones decorativas, gradientes animados ni transiciones lar
 
 ## 3. Configuración técnica de Tailwind
 
-El frontend objetivo usa Tailwind CSS v4. Mientras la migración esté en curso, esas dependencias pueden existir en la app legacy; al finalizar deben vivir en `apps/frontend/package.json`:
+El frontend objetivo usa Tailwind CSS v4. Las dependencias deben vivir en `apps/frontend/package.json`:
 
 - `tailwindcss: ^4`
 - `@tailwindcss/postcss: ^4`

@@ -22,7 +22,7 @@ StockTrack360/
 └── package.json
 ```
 
-La carpeta `stock-track-360/` puede existir temporalmente como frontend legacy/prototipo pendiente de migración a `apps/frontend`. No es la arquitectura oficial nueva.
+El frontend oficial vive en `apps/frontend`. La carpeta temporal del prototipo fue retirada después de migrar su base visual.
 
 ## Apps
 
@@ -61,7 +61,7 @@ pnpm dev:all
 pnpm lint
 ```
 
-Estado actual: algunas apps pueden tener scripts placeholder mientras se completa la migración por fases.
+Estado actual: el frontend oficial se ejecuta desde `apps/frontend`.
 
 ## Orden sugerido de ejecución local
 

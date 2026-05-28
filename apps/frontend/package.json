@@ -2,7 +2,20 @@
   "name": "@stocktrack360/frontend",
   "private": true,
   "scripts": {
-    "dev": "node -e \"console.log('Frontend pendiente de mover en Fase 2. Usa pnpm dev:frontend desde la raiz por ahora.')\"",
-    "lint": "node -e \"console.log('Frontend pendiente de mover en Fase 2. Usa pnpm lint desde la raiz por ahora.')\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tailwindcss": "^4"
   }
 }
