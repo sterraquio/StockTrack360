@@ -1,6 +1,10 @@
 import { apiRequest } from "./apiClient";
 import { API_CONTRACT } from "./apiContract";
-import { clearAuthToken, setAuthToken } from "./authStorage";
+import {
+  clearAuthSession,
+  setAuthSession,
+  setAuthUser,
+} from "./authStorage";
 
 const { auth } = API_CONTRACT;
 
@@ -11,17 +15,24 @@ export async function login(credentials) {
     method: auth.login.method,
   });
 
-  if (response?.token) {
-    setAuthToken(response.token);
+  if (response?.token && response?.user) {
+    setAuthSession({
+      token: response.token,
+      user: response.user,
+    });
   }
 
   return response;
 }
 
-export function getCurrentUser() {
-  return apiRequest(auth.me.path, {
+export async function getCurrentUser() {
+  const user = await apiRequest(auth.me.path, {
     method: auth.me.method,
   });
+
+  setAuthUser(user);
+
+  return user;
 }
 
 export async function logout() {
@@ -30,6 +41,6 @@ export async function logout() {
       method: auth.logout.method,
     });
   } finally {
-    clearAuthToken();
+    clearAuthSession();
   }
 }

@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { classNames } from "@/utils/classNames";
 import { hasPermission, ROLES } from "@/utils/permissions";
 import { APP_ROUTES } from "@/utils/routes";
+import { SidebarIcon } from "./SidebarIcon.jsx";
 
 export function Sidebar({ role = ROLES.ADMIN }) {
   const pathname = usePathname();
@@ -14,8 +16,15 @@ export function Sidebar({ role = ROLES.ADMIN }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-secondary text-slate-300 lg:flex">
       <div className="flex h-16 items-center gap-3 border-b border-slate-800 px-6">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white">
-          ST
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm">
+          <Image
+            alt="StockTrack360"
+            className="h-full w-full object-contain"
+            height={32}
+            priority
+            src="/icon.png"
+            width={32}
+          />
         </span>
         <span className="text-xl font-bold tracking-tight text-white">
           StockTrack360
@@ -34,8 +43,8 @@ export function Sidebar({ role = ROLES.ADMIN }) {
               href={item.href}
               key={item.href}
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-xs font-bold">
-                {item.marker}
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-current">
+                <SidebarIcon className="h-4 w-4" name={item.icon} />
               </span>
               {item.label}
             </Link>
