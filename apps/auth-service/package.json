@@ -1,9 +1,10 @@
 {
   "name": "@stocktrack360/auth-service",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "node -e \"console.log('auth-service pendiente de implementar en Fase 4. Puerto objetivo: 4001.')\"",
-    "start": "node -e \"console.log('auth-service pendiente de implementar en Fase 4.')\"",
-    "lint": "node -e \"console.log('auth-service sin codigo para lint en Fase 1.')\""
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "lint": "node --check src/server.js && node --check src/store.js && node --check src/http.js && node --check src/security.js"
   }
 }

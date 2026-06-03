@@ -10,6 +10,8 @@ export const apiErrorCodes = {
   forbidden: "FORBIDDEN",
   invalidCredentials: "INVALID_CREDENTIALS",
   userInactive: "USER_INACTIVE",
+  emailAlreadyExists: "EMAIL_ALREADY_EXISTS",
+  userNotFound: "USER_NOT_FOUND",
   notFound: "NOT_FOUND",
   productNotFound: "PRODUCT_NOT_FOUND",
   categoryNotFound: "CATEGORY_NOT_FOUND",

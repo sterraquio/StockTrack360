@@ -167,7 +167,7 @@ function PlaceholderFilters({ pattern }) {
   if (pattern === "users") {
     return (
       <FilterToolbar actions={<Button>Registrar usuario</Button>}>
-        <SearchInput placeholder="Buscar por nombre o correo..." />
+        <SearchInput label="Buscar por" placeholder="Nombre o correo..." />
         <Select label="Estado" options={statusOptions} />
       </FilterToolbar>
     );
@@ -175,7 +175,7 @@ function PlaceholderFilters({ pattern }) {
 
   return (
     <FilterToolbar actions={<Button variant="secondary">Limpiar filtros</Button>}>
-      <SearchInput placeholder="Buscar por nombre o SKU..." />
+      <SearchInput label="Buscar por" placeholder="Nombre o SKU..." />
       <Select label="Categoría" options={categoryOptions} />
     </FilterToolbar>
   );
