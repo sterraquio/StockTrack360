@@ -1,7 +1,11 @@
-import { getProductById, listProducts } from "./productsService";
+import { getProductById, listCategories, listProducts } from "./productsService";
 
 export function listInventory(query) {
   return listProducts(query);
+}
+
+export function listInventoryCategories() {
+  return listCategories();
 }
 
 export function getInventoryProductById(id) {

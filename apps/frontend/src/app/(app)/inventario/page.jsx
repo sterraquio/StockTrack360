@@ -1,16 +1,5 @@
-import { ModulePlaceholder } from "@/features/shared/ModulePlaceholder";
+import { InventoryPage } from "@/features/inventory/InventoryPage";
 
 export default function InventoryRoute() {
-  return (
-    <ModulePlaceholder
-      description="Consulta general de existencias con búsqueda, filtros y paginación."
-      highlights={[
-        { label: "Búsqueda", status: "Nombre/SKU", value: "Lista" },
-        { label: "Paginación", status: "> 10", value: "Activa", variant: "success" },
-        { label: "Stock 0", status: "Rojo", value: "Regla", variant: "danger" },
-      ]}
-      pattern="inventory"
-      title="Inventario"
-    />
-  );
+  return <InventoryPage />;
 }

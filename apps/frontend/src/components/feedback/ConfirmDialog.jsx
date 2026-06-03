@@ -4,6 +4,7 @@ import { Button, Modal } from "@/components/ui";
 
 export function ConfirmDialog({
   cancelLabel = "Cancelar",
+  children,
   confirmLabel = "Confirmar",
   description,
   loading = false,
@@ -30,6 +31,8 @@ export function ConfirmDialog({
       onOpenChange={onOpenChange}
       open={open}
       title={title}
-    />
+    >
+      {children}
+    </Modal>
   );
 }
