@@ -38,7 +38,7 @@ export async function mockLogin(credentials) {
   if (!user) {
     throw new ApiClientError({
       code: "INVALID_CREDENTIALS",
-      message: "Correo o contraseña incorrectos.",
+      message: "Usuario o contraseña incorrectos.",
       status: 401,
     });
   }
