@@ -1,0 +1,1116 @@
+openapi: 3.1.0
+info:
+  title: StockTrack360 API Gateway
+  version: 0.1.0
+  description: Contrato publico del API Gateway para el MVP de StockTrack360.
+servers:
+  - url: http://localhost:4000
+    description: API Gateway local
+tags:
+  - name: Auth
+  - name: Users
+  - name: Inventory
+  - name: Alerts
+  - name: Reports
+security:
+  - bearerAuth: []
+paths:
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      security: []
+      x-internal-service: auth-service
+      x-internal-path: /internal/auth/login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login exitoso.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/auth/me:
+    get:
+      tags: [Auth]
+      summary: Obtener usuario autenticado
+      x-internal-service: auth-service
+      x-internal-path: /internal/auth/me
+      responses:
+        "200":
+          description: Usuario autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Cerrar sesion
+      x-internal-service: auth-service
+      x-internal-path: /internal/auth/logout
+      responses:
+        "200":
+          description: Sesion cerrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/auth/users:
+    get:
+      tags: [Users]
+      summary: Listar usuarios
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: auth-service
+      x-internal-path: /internal/users
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - name: role
+          in: query
+          schema:
+            $ref: "#/components/schemas/Role"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/UserStatus"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Usuarios paginados.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Users]
+      summary: Crear usuario
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: auth-service
+      x-internal-path: /internal/users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        "201":
+          description: Usuario creado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/auth/users/{id}:
+    patch:
+      tags: [Users]
+      summary: Editar usuario
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: auth-service
+      x-internal-path: /internal/users/:id
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateRequest"
+      responses:
+        "200":
+          description: Usuario actualizado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/inventory/products:
+    get:
+      tags: [Inventory]
+      summary: Listar productos
+      x-internal-service: inventory-service
+      x-internal-path: /internal/products
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Sku"
+        - $ref: "#/components/parameters/CategoryId"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Productos paginados.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Inventory]
+      summary: Crear producto
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: inventory-service
+      x-internal-path: /internal/products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreateRequest"
+      responses:
+        "201":
+          description: Producto creado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/inventory/products/{id}:
+    get:
+      tags: [Inventory]
+      summary: Obtener producto por ID
+      x-internal-service: inventory-service
+      x-internal-path: /internal/products/:id
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Producto.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Inventory]
+      summary: Editar producto
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: inventory-service
+      x-internal-path: /internal/products/:id
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdateRequest"
+      responses:
+        "200":
+          description: Producto actualizado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Inventory]
+      summary: Eliminar producto
+      x-roles: [ADMINISTRADOR]
+      x-internal-service: inventory-service
+      x-internal-path: /internal/products/:id
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Producto eliminado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/inventory/categories:
+    get:
+      tags: [Inventory]
+      summary: Listar categorias predefinidas
+      x-internal-service: inventory-service
+      x-internal-path: /internal/categories
+      responses:
+        "200":
+          description: Categorias.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Inventory]
+      summary: Crear categoria tecnica
+      description: Endpoint reservado para administracion tecnica o seed. No usar desde la interfaz del MVP.
+      x-roles: [ADMINISTRADOR]
+      x-mvp-visible-in-frontend: false
+      x-internal-service: inventory-service
+      x-internal-path: /internal/categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryCreateRequest"
+      responses:
+        "201":
+          description: Categoria creada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/inventory/movements/entries:
+    post:
+      tags: [Inventory]
+      summary: Registrar entrada de inventario
+      x-internal-service: inventory-service
+      x-internal-path: /internal/movements/entries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementRequest"
+      responses:
+        "201":
+          description: Movimiento creado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryMovement"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/inventory/movements/exits:
+    post:
+      tags: [Inventory]
+      summary: Registrar salida de inventario
+      x-internal-service: inventory-service
+      x-internal-path: /internal/movements/exits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementRequest"
+      responses:
+        "201":
+          description: Movimiento creado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryMovement"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/inventory/movements:
+    get:
+      tags: [Inventory]
+      summary: Listar movimientos de inventario
+      x-internal-service: inventory-service
+      x-internal-path: /internal/movements
+      parameters:
+        - name: productId
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/MovementType"
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Movimientos paginados.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/InventoryMovement"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/alerts/low-stock:
+    get:
+      tags: [Alerts]
+      summary: Alertas de stock bajo
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/alerts/low-stock
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Alertas de stock bajo.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/LowStockAlert"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/alerts/expired:
+    get:
+      tags: [Alerts]
+      summary: Alertas de productos vencidos
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/alerts/expired
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Alertas de vencimiento.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ExpirationAlert"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/alerts/expiring-soon:
+    get:
+      tags: [Alerts]
+      summary: Alertas de productos proximos a vencer
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/alerts/expiring-soon
+      parameters:
+        - $ref: "#/components/parameters/Days"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Alertas de proximos vencimientos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ExpirationAlert"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/reports/dashboard:
+    get:
+      tags: [Reports]
+      summary: Dashboard
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/reports/dashboard
+      parameters:
+        - $ref: "#/components/parameters/From"
+        - $ref: "#/components/parameters/To"
+      responses:
+        "200":
+          description: Resumen de dashboard.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/reports/low-stock:
+    get:
+      tags: [Reports]
+      summary: Reporte de stock bajo
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/reports/low-stock
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Reporte de stock bajo.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/LowStockAlert"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/reports/expiring-products:
+    get:
+      tags: [Reports]
+      summary: Reporte de productos proximos a vencer
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/reports/expiring-products
+      parameters:
+        - $ref: "#/components/parameters/Days"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Reporte de productos proximos a vencer.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ExpirationAlert"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/reports/top-exits:
+    get:
+      tags: [Reports]
+      summary: Reporte de productos con mas salidas
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/reports/top-exits
+      parameters:
+        - $ref: "#/components/parameters/From"
+        - $ref: "#/components/parameters/To"
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        "200":
+          description: Reporte top salidas.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReportItem"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/reports/movements-by-period:
+    get:
+      tags: [Reports]
+      summary: Reporte de movimientos por periodo
+      x-internal-service: reporting-alerts-service
+      x-internal-path: /internal/reports/movements-by-period
+      parameters:
+        - $ref: "#/components/parameters/From"
+        - $ref: "#/components/parameters/To"
+        - name: groupBy
+          in: query
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: day
+      responses:
+        "200":
+          description: Movimientos agrupados por periodo.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MovementPeriodItem"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    Search:
+      name: search
+      in: query
+      schema:
+        type: string
+    Sku:
+      name: sku
+      in: query
+      schema:
+        type: string
+    CategoryId:
+      name: categoryId
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Days:
+      name: days
+      in: query
+      schema:
+        type: integer
+        enum: [7, 30]
+        default: 30
+    From:
+      name: from
+      in: query
+      schema:
+        type: string
+        format: date
+    To:
+      name: to
+      in: query
+      schema:
+        type: string
+        format: date
+  responses:
+    ValidationError:
+      description: Error de validacion.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Unauthorized:
+      description: Token ausente o invalido.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Forbidden:
+      description: Rol sin permisos.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    InvalidCredentials:
+      description: Credenciales invalidas.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    NotFound:
+      description: Recurso no encontrado.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Conflict:
+      description: Conflicto de regla de negocio.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    ServiceUnavailable:
+      description: Servicio dependiente no disponible.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+  schemas:
+    Role:
+      type: string
+      enum: [ADMINISTRADOR, USUARIO]
+    UserStatus:
+      type: string
+      enum: [ACTIVE, INACTIVE]
+    MovementType:
+      type: string
+      enum: [ENTRADA, SALIDA]
+    ExpirationStatus:
+      type: string
+      enum: [EXPIRED, EXPIRING_SOON]
+    ApiError:
+      type: object
+      required: [message, code]
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        details:
+          nullable: true
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+    Pagination:
+      type: object
+      required: [page, pageSize, totalItems, totalPages]
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+    PaginatedResponse:
+      type: object
+      required: [items, pagination]
+      properties:
+        items:
+          type: array
+          items: {}
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+    LoginResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+    User:
+      type: object
+      required: [id, name, email, role, status]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          $ref: "#/components/schemas/Role"
+        status:
+          $ref: "#/components/schemas/UserStatus"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UserCreateRequest:
+      type: object
+      required: [name, email, password, role, status]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+        role:
+          $ref: "#/components/schemas/Role"
+        status:
+          $ref: "#/components/schemas/UserStatus"
+    UserUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        role:
+          $ref: "#/components/schemas/Role"
+        status:
+          $ref: "#/components/schemas/UserStatus"
+    Category:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        requiresExpirationDate:
+          type: boolean
+          default: false
+    CategoryCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        requiresExpirationDate:
+          type: boolean
+          default: false
+    Product:
+      type: object
+      required: [id, name, sku, category, availableStock]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        sku:
+          type: string
+        category:
+          $ref: "#/components/schemas/Category"
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+        minimumStock:
+          type: integer
+          nullable: true
+        availableStock:
+          type: integer
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProductCreateRequest:
+      type: object
+      required: [name, sku, categoryId]
+      properties:
+        name:
+          type: string
+        sku:
+          type: string
+        categoryId:
+          type: string
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+        minimumStock:
+          type: integer
+          minimum: 0
+          nullable: true
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        categoryId:
+          type: string
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+        minimumStock:
+          type: integer
+          minimum: 0
+          nullable: true
+    MovementRequest:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+    InventoryMovement:
+      type: object
+      required: [id, productId, userId, type, quantity, createdAt]
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        productName:
+          type: string
+        sku:
+          type: string
+        userId:
+          type: string
+        userName:
+          type: string
+        type:
+          $ref: "#/components/schemas/MovementType"
+        quantity:
+          type: integer
+          minimum: 1
+        createdAt:
+          type: string
+          format: date-time
+    LowStockAlert:
+      type: object
+      required: [productId, name, sku, availableStock, minimumStock]
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        sku:
+          type: string
+        categoryName:
+          type: string
+        availableStock:
+          type: integer
+        minimumStock:
+          type: integer
+    ExpirationAlert:
+      type: object
+      required: [productId, name, sku, expirationDate, status]
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        sku:
+          type: string
+        categoryName:
+          type: string
+        expirationDate:
+          type: string
+          format: date
+        daysUntilExpiration:
+          type: integer
+        status:
+          $ref: "#/components/schemas/ExpirationStatus"
+    DashboardSummary:
+      type: object
+      required:
+        - totalProducts
+        - lowStockProducts
+        - expiredProducts
+        - expiringSoonProducts
+        - movementsInPeriod
+        - topMovedProducts
+      properties:
+        totalProducts:
+          type: integer
+        lowStockProducts:
+          type: integer
+        expiredProducts:
+          type: integer
+        expiringSoonProducts:
+          type: integer
+        movementsInPeriod:
+          type: integer
+        topMovedProducts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportItem"
+    ReportItem:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        name:
+          type: string
+        sku:
+          type: string
+        categoryName:
+          type: string
+        value:
+          type: number
+        label:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    MovementPeriodItem:
+      type: object
+      required: [period, entries, exits]
+      properties:
+        period:
+          type: string
+        entries:
+          type: integer
+        exits:
+          type: integer

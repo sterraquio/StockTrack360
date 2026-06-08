@@ -1,0 +1,9 @@
+{
+  "name": "@stocktrack360/reporting-alerts-service",
+  "private": true,
+  "scripts": {
+    "dev": "node -e \"console.log('reporting-alerts-service pendiente de implementar en Fase 6. Puerto objetivo: 4003.')\"",
+    "start": "node -e \"console.log('reporting-alerts-service pendiente de implementar en Fase 6.')\"",
+    "lint": "node -e \"console.log('reporting-alerts-service sin codigo para lint en Fase 1.')\""
+  }
+}

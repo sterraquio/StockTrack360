@@ -1,0 +1,17 @@
+export const USER_MESSAGES = {
+  operationSuccess: "Operación realizada correctamente.",
+  productCreated: "Producto creado correctamente.",
+  productUpdated: "Producto actualizado correctamente.",
+  productDeleted: "Producto eliminado correctamente.",
+  saveError: "No se pudo guardar. Inténtalo nuevamente.",
+  requiredFields: "Completa los campos obligatorios.",
+  noResults: "Sin resultados.",
+  loading: "Cargando información...",
+  lowStock: "Stock bajo. Revisa el inventario.",
+  expiredProduct: "Producto vencido.",
+  expiringProduct: "Producto próximo a vencer.",
+  invalidSession: "Tu sesión no es válida. Inicia sesión nuevamente.",
+  forbidden: "No tienes permisos para realizar esta acción.",
+  invalidLogin: "Usuario o contraseña incorrectos.",
+  dashboardLoadError: "No se pudo cargar el dashboard. Inténtalo nuevamente.",
+};
