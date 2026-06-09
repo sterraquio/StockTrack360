@@ -1,6 +1,7 @@
 # StockTrack360
 
 StockTrack360 es un MVP académico de aplicación web para gestión de inventario orientado a pequeños y medianos negocios de Colombia. Permite administrar usuarios, productos, stock, entradas, salidas, historial de movimientos, alertas, dashboard y reportes básicos.
+# Hola
 
 ## Arquitectura
 
