@@ -274,7 +274,7 @@ GET /internal/reports/movements-by-period
 
 - Errores posibles: `400 VALIDATION_ERROR`, `401 INVALID_CREDENTIALS`, `403 USER_INACTIVE`
 - Validaciones: `email` requerido, `password` requerido.
-- Notas de implementacion: el mensaje de login fallido debe ser generico: `Correo o contrasena incorrectos.`
+- Notas de implementacion: el mensaje de login fallido debe ser generico: `Correo o contraseña incorrectos.`
 
 ### Obtener usuario actual
 
@@ -661,7 +661,7 @@ GET /internal/reports/movements-by-period
 - Body: Ninguno
 - Respuesta 200: respuesta paginada de `ExpirationAlert`
 - Errores posibles: `401 UNAUTHORIZED`, `403 FORBIDDEN`
-- Validaciones: `expirationDate < today`.
+- Validaciones: `expirationDate <= today`.
 - Notas de implementacion: productos sin vencimiento no generan alerta.
 
 ### Alertas de productos proximos a vencer
