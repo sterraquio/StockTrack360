@@ -10,6 +10,6 @@
     "dev:inventory": "pnpm --filter @stocktrack360/inventory-service dev",
     "dev:reporting-alerts": "pnpm --filter @stocktrack360/reporting-alerts-service dev",
     "dev:all": "pnpm --parallel --stream -r dev",
-    "lint": "pnpm --filter @stocktrack360/frontend lint"
+    "lint": "pnpm -r lint"
   }
 }

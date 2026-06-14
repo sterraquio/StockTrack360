@@ -62,7 +62,15 @@ pnpm dev:all
 pnpm lint
 ```
 
-Estado actual: el frontend oficial se ejecuta desde `apps/frontend`.
+Estado actual: el frontend oficial se ejecuta desde `apps/frontend` y las cuatro apps backend ya levantan servidores Express base para la Fase 2.
+
+## Variables de entorno backend
+
+Cada app backend tiene su propio `.env.example`. Para entorno local, copiar el archivo correspondiente a `.env` dentro de cada app y completar solo valores locales.
+
+- `JWT_SECRET` debe ser el mismo en gateway y servicios.
+- `SUPABASE_SECRET_KEY` o `SUPABASE_SERVICE_ROLE_KEY` se usa solo en servicios backend.
+- No agregar claves privadas, contrasenas ni variables `NEXT_PUBLIC_SUPABASE_*` al frontend para consultar datos.
 
 ## Orden sugerido de ejecución local
 
