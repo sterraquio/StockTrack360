@@ -1,7 +1,12 @@
 export const errorCodes = {
+  validationError: "VALIDATION_ERROR",
   unauthorized: "UNAUTHORIZED",
   forbidden: "FORBIDDEN",
+  invalidCredentials: "INVALID_CREDENTIALS",
+  userInactive: "USER_INACTIVE",
+  emailAlreadyExists: "EMAIL_ALREADY_EXISTS",
   notFound: "NOT_FOUND",
+  userNotFound: "USER_NOT_FOUND",
   serviceUnavailable: "SERVICE_UNAVAILABLE",
   internalError: "INTERNAL_ERROR",
 };

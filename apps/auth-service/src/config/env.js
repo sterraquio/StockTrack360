@@ -15,4 +15,5 @@ export const env = {
   supabaseUrl: process.env.SUPABASE_URL || "",
   supabaseSecretKey: process.env.SUPABASE_SECRET_KEY || "",
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "8h",
 };

@@ -1,7 +1,13 @@
 export const errorCodes = {
+  validationError: "VALIDATION_ERROR",
   unauthorized: "UNAUTHORIZED",
   forbidden: "FORBIDDEN",
   notFound: "NOT_FOUND",
+  productNotFound: "PRODUCT_NOT_FOUND",
+  categoryNotFound: "CATEGORY_NOT_FOUND",
+  skuAlreadyExists: "SKU_ALREADY_EXISTS",
+  categoryAlreadyExists: "CATEGORY_ALREADY_EXISTS",
+  productHasStock: "PRODUCT_HAS_STOCK",
   serviceUnavailable: "SERVICE_UNAVAILABLE",
   internalError: "INTERNAL_ERROR",
 };
