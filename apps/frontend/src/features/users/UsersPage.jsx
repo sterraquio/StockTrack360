@@ -389,7 +389,12 @@ export function UsersPage() {
         open={isModalOpen}
         title={modalTitle}
       >
-        <form className="space-y-5" id="user-form" onSubmit={handleSubmit}>
+        <form
+          className="space-y-5"
+          id="user-form"
+          noValidate
+          onSubmit={handleSubmit}
+        >
           {formError ? (
             <Alert title="No se pudo guardar" variant="error">
               {formError}

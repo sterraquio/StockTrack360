@@ -453,7 +453,12 @@ export function ProductsPage() {
         open={isProductModalOpen}
         title={modalTitle}
       >
-        <form className="space-y-5" id="product-form" onSubmit={handleSubmit}>
+        <form
+          className="space-y-5"
+          id="product-form"
+          noValidate
+          onSubmit={handleSubmit}
+        >
           {formError ? (
             <Alert title="No se pudo guardar" variant="error">
               {formError}
