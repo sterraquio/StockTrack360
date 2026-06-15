@@ -1,4 +1,5 @@
 export const errorCodes = {
+  validationError: "VALIDATION_ERROR",
   unauthorized: "UNAUTHORIZED",
   forbidden: "FORBIDDEN",
   notFound: "NOT_FOUND",

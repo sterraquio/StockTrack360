@@ -9,9 +9,10 @@ Responsabilidades objetivo:
 - Dashboard con indicadores basicos.
 - Reportes de stock bajo, vencimientos, top salidas y movimientos por periodo.
 
-Estado actual: estructura preparada en Fase 1. La implementacion corresponde a la Fase 6.
+Estado actual: alertas reales, dashboard y reportes basicos implementados contra
+Supabase/PostgreSQL.
 
-## Fase 2
+## Ejecucion local
 
 El servicio ya tiene un servidor Express base en `src/server.js`.
 
@@ -20,7 +21,16 @@ El servicio ya tiene un servidor Express base en `src/server.js`.
 - JWT preparado para rutas protegidas.
 - Cliente Supabase preparado solo para backend.
 - Errores normalizados con `{ message, code, details }`.
-- Las rutas oficiales responden `503 SERVICE_UNAVAILABLE` hasta implementar alertas y reportes reales.
+- Alertas de stock bajo, vencidos y proximos a vencer consumen productos desde
+  Supabase con paginacion.
+- Dashboard consume productos y movimientos para calcular KPIs del periodo.
+- Reportes disponibles:
+  - `/internal/reports/low-stock`
+  - `/internal/reports/expiring-products`
+  - `/internal/reports/top-exits`
+  - `/internal/reports/movements-by-period`
+- Las respuestas mantienen errores normalizados y validan `from`, `to`, `days`,
+  `limit`, `groupBy`, `page` y `pageSize` segun contrato.
 
 Variables requeridas en entorno local:
 

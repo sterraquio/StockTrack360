@@ -9,9 +9,9 @@ Responsabilidades objetivo:
 - Entradas, salidas e historial de movimientos.
 - Reglas de SKU, eliminacion controlada y stock no negativo.
 
-Estado actual: estructura preparada en Fase 1. La implementacion corresponde a la Fase 5.
+Estado actual: productos, categorias y movimientos reales implementados hasta Fase 7.
 
-## Fase 2
+## Ejecucion local
 
 El servicio ya tiene un servidor Express base en `src/server.js`.
 
@@ -20,7 +20,11 @@ El servicio ya tiene un servidor Express base en `src/server.js`.
 - JWT preparado para rutas protegidas.
 - Cliente Supabase preparado solo para backend.
 - Errores normalizados con `{ message, code, details }`.
-- Las rutas oficiales responden `503 SERVICE_UNAVAILABLE` hasta implementar inventario real.
+- Productos y categorias consumen Supabase desde backend.
+- Movimientos de entrada y salida usan la funcion RPC `register_inventory_movement`
+  versionada en `docs/database/schema.sql` para actualizar stock y registrar historial
+  en una operacion atomica.
+- El historial soporta filtros por producto, tipo y rango de fechas, con paginacion.
 
 Variables requeridas en entorno local:
 

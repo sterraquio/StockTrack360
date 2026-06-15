@@ -3,7 +3,11 @@ import {
   createCategoryController,
   listCategoriesController,
 } from "../controllers/categories.controller.js";
-import { pendingService } from "../controllers/pending.controller.js";
+import {
+  createEntryMovementController,
+  createExitMovementController,
+  listMovementsController,
+} from "../controllers/movements.controller.js";
 import {
   createProductController,
   deleteProductController,
@@ -16,7 +20,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const internalRoutes = Router();
 
-const movementsModule = pendingService("movements");
 const adminOnly = requireRoles([roles.admin]);
 const authenticatedRoles = requireRoles([roles.admin, roles.user]);
 
@@ -62,6 +65,21 @@ internalRoutes.post(
   adminOnly,
   asyncHandler(createCategoryController),
 );
-internalRoutes.get("/movements", requireAuth, authenticatedRoles, movementsModule);
-internalRoutes.post("/movements/entries", requireAuth, authenticatedRoles, movementsModule);
-internalRoutes.post("/movements/exits", requireAuth, authenticatedRoles, movementsModule);
+internalRoutes.get(
+  "/movements",
+  requireAuth,
+  authenticatedRoles,
+  asyncHandler(listMovementsController),
+);
+internalRoutes.post(
+  "/movements/entries",
+  requireAuth,
+  authenticatedRoles,
+  asyncHandler(createEntryMovementController),
+);
+internalRoutes.post(
+  "/movements/exits",
+  requireAuth,
+  authenticatedRoles,
+  asyncHandler(createExitMovementController),
+);

@@ -8,6 +8,7 @@ export const errorCodes = {
   skuAlreadyExists: "SKU_ALREADY_EXISTS",
   categoryAlreadyExists: "CATEGORY_ALREADY_EXISTS",
   productHasStock: "PRODUCT_HAS_STOCK",
+  insufficientStock: "INSUFFICIENT_STOCK",
   serviceUnavailable: "SERVICE_UNAVAILABLE",
   internalError: "INTERNAL_ERROR",
 };
