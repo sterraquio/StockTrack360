@@ -106,7 +106,7 @@ export function LoginPage() {
             Ingresa con tus credenciales para continuar.
           </p>
         </div>
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" noValidate onSubmit={handleSubmit}>
           {sessionNotice ? (
             <Alert variant="warning">{sessionNotice}</Alert>
           ) : null}

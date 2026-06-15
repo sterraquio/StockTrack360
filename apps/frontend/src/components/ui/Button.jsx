@@ -7,6 +7,8 @@ const variants = {
     "bg-primary text-white shadow-sm hover:bg-primary-hover focus:ring-primary",
   secondary:
     "border border-border-input bg-surface text-text-body shadow-sm hover:bg-slate-50 focus:ring-primary",
+  success:
+    "bg-success text-white shadow-sm hover:bg-success-hover focus:ring-success",
   danger:
     "bg-danger text-white shadow-sm hover:bg-danger-hover focus:ring-danger",
   ghost: "text-text-body hover:bg-slate-100 focus:ring-primary",

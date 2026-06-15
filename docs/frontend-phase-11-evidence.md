@@ -17,7 +17,7 @@ Fase 11 del plan frontend: validaciones finales y evidencias para cerrar calidad
 | Roles correctos | Cumple | `utils/permissions.js` conserva solo `ADMINISTRADOR` y `USUARIO`; `AuthenticatedLayout` valida acceso de ruta y `ProductsPage` valida acciones por permiso. |
 | Estados UI en modulos | Cumple | Login, dashboard, usuarios, productos, inventario, movimientos, alertas y reportes cubren loading, error, empty y success segun aplique. |
 | Paginacion en listados mayores a 10 | Cumple | `PAGE_SIZE = 10` y `Pagination` en usuarios, productos, inventario, movimientos, alertas y reportes paginados. |
-| Mensajes estandar | Cumple | Login usa el mensaje generico oficial: `Usuario o contraseña incorrectos.` |
+| Mensajes estandar | Cumple | Login usa el mensaje generico oficial: `Correo o contraseña incorrectos.` |
 | Lint frontend | Cumple | `pnpm --filter @stocktrack360/frontend lint` finalizo sin errores. |
 | Build frontend | Cumple | `pnpm --filter @stocktrack360/frontend build` compilo correctamente en el entorno actual. |
 | Servidor local | Cumple | `http://127.0.0.1:3000/login` respondio `HTTP/1.1 200 OK`. |

@@ -618,7 +618,7 @@ No crear un rol adicional como `CONSULTA` en esta versión, porque no está defi
 
 | HU | Criterios de aceptación |
 |---|---|
-| HU-01 | Permite ingresar correo y contraseña. Si son correctos, permite acceso e identifica rol. Si son incorrectos, muestra `Correo o contraseña incorrectos` sin revelar el motivo. |
+| HU-01 | Permite ingresar correo y contraseña. Si son correctos, permite acceso e identifica rol. Si son incorrectos, muestra `Correo o contraseña incorrectos.` sin revelar el motivo. |
 | HU-02 | Muestra opción de cerrar sesión. Al cerrar, impide acceso a rutas protegidas y redirige al login. |
 | HU-03 | Reconoce rol autenticado. Restringe funciones administrativas. Valida permisos desde backend. Muestra `Acceso denegado` si no hay permiso. |
 | HU-04 | Solo administrador registra usuarios. Solicita nombre, correo, contraseña, rol y estado. Valida rol, duplicados y campos obligatorios. |
