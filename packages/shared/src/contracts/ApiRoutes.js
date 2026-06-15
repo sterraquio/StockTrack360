@@ -4,6 +4,8 @@ export const apiRoutes = {
       login: "/api/auth/login",
       me: "/api/auth/me",
       logout: "/api/auth/logout",
+      users: "/api/auth/users",
+      userById: "/api/auth/users/:id",
     },
     inventory: {
       products: "/api/inventory/products",

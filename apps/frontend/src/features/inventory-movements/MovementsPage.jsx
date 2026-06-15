@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Pagination, Table } from "@/components/data-display";
-import { Alert, EmptyState } from "@/components/feedback";
+import { Alert, EmptyState, Toast } from "@/components/feedback";
 import { FieldGroup, FilterToolbar } from "@/components/forms";
 import { PageContainer, PageHeader } from "@/components/layout";
 import { Badge, Button, Input, Modal, Select } from "@/components/ui";
@@ -181,6 +181,18 @@ export function MovementsPage() {
     };
   }, [filters, pagination.page]);
 
+  useEffect(() => {
+    if (!successMessage) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccessMessage("");
+    }, 4500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [successMessage]);
+
   function updateFilter(name, value) {
     setSuccessMessage("");
     setFilters((currentFilters) => ({
@@ -328,7 +340,7 @@ export function MovementsPage() {
               disabled={Boolean(productsError)}
               onClick={() => openMovementModal(MOVEMENT_TYPES.ENTRADA)}
               type="button"
-              variant="secondary"
+              variant="success"
             >
               Registrar entrada
             </Button>
@@ -347,9 +359,9 @@ export function MovementsPage() {
       />
 
       {successMessage ? (
-        <Alert title="Operación completada" variant="success">
+        <Toast title="Operación completada" variant="success">
           {successMessage}
-        </Alert>
+        </Toast>
       ) : null}
 
       {loadError ? (
@@ -457,7 +469,12 @@ export function MovementsPage() {
             <Button disabled={isSaving} onClick={closeModal} variant="secondary">
               Cancelar
             </Button>
-            <Button form="movement-form" loading={isSaving} type="submit">
+            <Button
+              form="movement-form"
+              loading={isSaving}
+              type="submit"
+              variant={isEntryModalOpen ? "success" : "primary"}
+            >
               Guardar
             </Button>
           </>
@@ -466,7 +483,12 @@ export function MovementsPage() {
         open={isMovementModalOpen}
         title={modalTitle}
       >
-        <form className="space-y-5" id="movement-form" onSubmit={handleSubmit}>
+        <form
+          className="space-y-5"
+          id="movement-form"
+          noValidate
+          onSubmit={handleSubmit}
+        >
           {formError ? (
             <Alert title="No se pudo guardar" variant="error">
               {formError}
