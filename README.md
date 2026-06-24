@@ -163,3 +163,5 @@ Validacion registrada:
 ## Alcance y restricciones
 
 El MVP mantiene solo los roles `ADMINISTRADOR` y `USUARIO`. No incluye facturacion electronica, pagos, e-commerce, app movil nativa, IA, multiples bodegas, lectores de codigo de barras, Docker, Kubernetes, Kafka, RabbitMQ, Prisma ni nuevas apps principales.
+
+# Ejemplo de pipeline
